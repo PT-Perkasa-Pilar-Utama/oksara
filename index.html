@@ -1,412 +1,764 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Oksara by PPU - Advanced OCR Solution</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Oksara: The Unified OCR Solution. Process anything, store nothing, return everything. A powerful, developer-first API for modern business."
+    />
+    <meta
+      name="keywords"
+      content="OCR, Oksara, API, Developer, Document Processing, Stateless, Server-to-Server, AI, Machine Learning"
+    />
+    <title>Oksara - The Unified OCR Solution</title>
+    <link rel="icon" href="logo.png" type="image/png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap"
+      rel="stylesheet"
+    />
     <style>
-        * {
-            font-family: 'Inter', sans-serif;
+      :root {
+        --dark-bg: #0d0b14;
+        --primary-glow: #a374ff;
+        --secondary-glow: #5e8fff;
+        --text-primary: #f0f2f5;
+        --text-secondary: #a9b2c1;
+        --card-bg: rgba(23, 20, 36, 0.7);
+        --border-color: rgba(163, 116, 255, 0.2);
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        background-color: var(--dark-bg);
+        color: var(--text-primary);
+        font-family: "Inter", sans-serif;
+        margin: 0;
+        overflow-x: hidden;
+      }
+
+      .background-animation {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        overflow: hidden;
+      }
+
+      .background-animation::before,
+      .background-animation::after {
+        content: "";
+        position: absolute;
+        width: 600px;
+        height: 600px;
+        border-radius: 50%;
+        background: radial-gradient(
+          circle,
+          var(--primary-glow),
+          transparent 60%
+        );
+        opacity: 0.15;
+        filter: blur(100px);
+        animation: pulse 20s infinite alternate;
+      }
+
+      .background-animation::after {
+        background: radial-gradient(
+          circle,
+          var(--secondary-glow),
+          transparent 60%
+        );
+        top: -200px;
+        right: -200px;
+        animation: pulse 25s infinite alternate-reverse;
+        animation-delay: -5s;
+      }
+
+      @keyframes pulse {
+        0% {
+          transform: scale(0.8) translate(50px, -50px);
         }
-        
-        body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            position: relative;
-            overflow-x: hidden;
+        100% {
+          transform: scale(1.2) translate(-50px, 50px);
         }
-        
-        /* Animated background with geometric shapes */
-        .bg-animated {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
-            animation: gradientShift 15s ease infinite;
+      }
+
+      .container {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 0 24px;
+      }
+
+      /* Header */
+      header {
+        padding: 20px 0;
+        position: fixed;
+        width: 100%;
+        top: 0;
+        z-index: 100;
+        background: rgba(13, 11, 20, 0.5);
+        backdrop-filter: blur(10px);
+        border-bottom: 1px solid var(--border-color);
+      }
+
+      .header-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        text-decoration: none;
+        color: var(--text-primary);
+        font-weight: 600;
+        font-size: 22px;
+      }
+
+      .logo img {
+        height: 36px;
+        transition: transform 0.5s ease;
+      }
+      .logo:hover img {
+        transform: rotate(360deg);
+      }
+
+      nav ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        gap: 32px;
+      }
+
+      nav a {
+        text-decoration: none;
+        color: var(--text-secondary);
+        font-weight: 500;
+        transition: color 0.3s ease;
+        position: relative;
+      }
+      nav a::after {
+        content: "";
+        position: absolute;
+        width: 0;
+        height: 2px;
+        bottom: -4px;
+        left: 50%;
+        background: linear-gradient(
+          90deg,
+          var(--primary-glow),
+          var(--secondary-glow)
+        );
+        transition: all 0.3s ease;
+      }
+      nav a:hover {
+        color: var(--text-primary);
+      }
+      nav a:hover::after {
+        width: 100%;
+        left: 0;
+      }
+
+      .cta-button {
+        background: linear-gradient(
+          90deg,
+          var(--primary-glow),
+          var(--secondary-glow)
+        );
+        color: white;
+        padding: 10px 22px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border: none;
+        cursor: pointer;
+      }
+      .cta-button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 20px rgba(163, 116, 255, 0.3);
+      }
+
+      /* Hero Section */
+      .hero {
+        padding: 200px 0 150px;
+        text-align: center;
+      }
+      .hero .slogan {
+        font-size: 64px;
+        font-weight: 900;
+        margin-bottom: 24px;
+        line-height: 1.2;
+        letter-spacing: -2px;
+      }
+      .slogan span {
+        display: inline-block;
+        opacity: 0;
+        animation: fadeInSlogan 0.8s forwards;
+      }
+      .slogan span:nth-child(1) {
+        animation-delay: 0.2s;
+      }
+      .slogan span:nth-child(2) {
+        animation-delay: 0.4s;
+      }
+      .slogan span:nth-child(3) {
+        animation-delay: 0.6s;
+      }
+      .slogan .highlight {
+        background: linear-gradient(
+          90deg,
+          var(--primary-glow),
+          var(--secondary-glow)
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      @keyframes fadeInSlogan {
+        from {
+          transform: translateY(30px);
+          opacity: 0;
         }
-        
-        @keyframes gradientShift {
-            0%, 100% { background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%); }
-            25% { background: linear-gradient(135deg, #f093fb 0%, #f5576c 50%, #4facfe 100%); }
-            50% { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 50%, #667eea 100%); }
-            75% { background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%); }
+        to {
+          transform: translateY(0);
+          opacity: 1;
         }
-        
-        .geometric-shape {
-            position: absolute;
-            opacity: 0.1;
-            animation: float 6s ease-in-out infinite;
+      }
+      .hero p {
+        font-size: 18px;
+        max-width: 650px;
+        margin: 0 auto 40px;
+        color: var(--text-secondary);
+        line-height: 1.7;
+      }
+
+      /* General Section Styling */
+      section {
+        padding: 100px 0;
+      }
+      .section-title {
+        text-align: center;
+        font-size: 42px;
+        font-weight: 700;
+        margin-bottom: 10px;
+      }
+      .section-subtitle {
+        text-align: center;
+        color: var(--text-secondary);
+        max-width: 600px;
+        margin: 0 auto 60px;
+      }
+
+      /* Philosophy Section */
+      .philosophy-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 30px;
+      }
+      .philosophy-card {
+        background: var(--card-bg);
+        border: 1px solid var(--border-color);
+        padding: 32px;
+        border-radius: 12px;
+        backdrop-filter: blur(5px);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+      }
+      .philosophy-card::before {
+        content: "";
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(
+          circle,
+          rgba(163, 116, 255, 0.15),
+          transparent 30%
+        );
+        transform: scale(0);
+        transition: transform 0.5s ease;
+      }
+      .philosophy-card:hover {
+        transform: translateY(-5px);
+        border-color: rgba(163, 116, 255, 0.5);
+      }
+      .philosophy-card:hover::before {
+        transform: scale(1);
+      }
+      .philosophy-card h3 {
+        font-size: 24px;
+        margin: 0 0 12px;
+        color: var(--text-primary);
+      }
+      .philosophy-card h3 .highlight {
+        font-size: 32px;
+        font-weight: 900;
+        background: linear-gradient(
+          90deg,
+          var(--primary-glow),
+          var(--secondary-glow)
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-right: 8px;
+      }
+      .philosophy-card p {
+        margin: 0;
+        color: var(--text-secondary);
+        font-size: 16px;
+      }
+
+      /* Use Cases Section */
+      .use-cases-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 25px;
+      }
+      .use-case-card {
+        background: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 24px;
+        text-align: center;
+        transition: all 0.3s ease;
+      }
+      .use-case-card:hover {
+        transform: translateY(-5px);
+        border-color: var(--primary-glow);
+        background: rgba(23, 20, 36, 1);
+      }
+      .use-case-card svg {
+        width: 40px;
+        height: 40px;
+        margin-bottom: 16px;
+        color: var(--text-primary);
+      }
+      .use-case-card p {
+        margin: 0;
+        font-weight: 600;
+      }
+
+      /* Oksara Difference Section */
+      .difference-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 30px;
+      }
+      .difference-card {
+        background: var(--card-bg);
+        border: 1px solid var(--border-color);
+        padding: 32px;
+        border-radius: 12px;
+        text-align: center;
+        transition: all 0.3s ease;
+      }
+      .difference-card:hover {
+        transform: translateY(-5px);
+        border-color: var(--secondary-glow);
+      }
+      .difference-card .icon-wrapper {
+        width: 64px;
+        height: 64px;
+        margin: 0 auto 24px;
+        border-radius: 50%;
+        background: linear-gradient(
+          135deg,
+          var(--primary-glow),
+          var(--secondary-glow)
+        );
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .difference-card svg {
+        width: 32px;
+        height: 32px;
+        color: white;
+      }
+      .difference-card h3 {
+        font-size: 20px;
+        margin-bottom: 12px;
+      }
+      .difference-card p {
+        color: var(--text-secondary);
+        font-size: 15px;
+        line-height: 1.6;
+      }
+
+      /* CTA Section */
+      .cta-section {
+        margin: 100px 0;
+        padding: 60px 30px;
+        text-align: center;
+        background: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 16px;
+        position: relative;
+        overflow: hidden;
+      }
+      .cta-section::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          45deg,
+          var(--primary-glow),
+          var(--secondary-glow)
+        );
+        opacity: 0.1;
+        filter: blur(50px);
+        z-index: -1;
+      }
+      .cta-section h2 {
+        font-size: 36px;
+        margin: 0 0 16px;
+      }
+      .cta-section p {
+        color: var(--text-secondary);
+        margin: 0 0 32px;
+      }
+
+      /* Footer */
+      footer {
+        margin-top: 100px;
+        padding: 40px 0;
+        border-top: 1px solid var(--border-color);
+      }
+      .footer-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 20px;
+      }
+      .footer-logo img {
+        height: 40px;
+        opacity: 0.7;
+      }
+      .footer-text {
+        color: var(--text-secondary);
+        font-size: 14px;
+      }
+
+      /* Responsive */
+      @media (max-width: 992px) {
+        .difference-grid {
+          grid-template-columns: 1fr;
         }
-        
-        .geometric-shape:nth-child(1) {
-            top: 10%;
-            left: 10%;
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(45deg, #ff6b6b, #feca57);
-            border-radius: 50%;
-            animation-delay: 0s;
+      }
+      @media (max-width: 768px) {
+        .hero .slogan {
+          font-size: 48px;
         }
-        
-        .geometric-shape:nth-child(2) {
-            top: 20%;
-            right: 15%;
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(45deg, #48cae4, #0096c7);
-            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
-            animation-delay: 2s;
+        .philosophy-grid {
+          grid-template-columns: 1fr;
         }
-        
-        .geometric-shape:nth-child(3) {
-            bottom: 20%;
-            left: 20%;
-            width: 100px;
-            height: 100px;
-            background: linear-gradient(45deg, #a8e6cf, #7fcdcd);
-            clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
-            animation-delay: 4s;
+        nav ul {
+          display: none;
         }
-        
-        .geometric-shape:nth-child(4) {
-            bottom: 30%;
-            right: 10%;
-            width: 70px;
-            height: 70px;
-            background: linear-gradient(45deg, #ffd93d, #ff6b6b);
-            border-radius: 15px;
-            animation-delay: 1s;
-        }
-        
-        @keyframes float {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(180deg); }
-        }
-        
-        /* Glassmorphism effects */
-        .glass-morphism {
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(20px);
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-        }
-        
-        .glass-morphism-strong {
-            background: rgba(255, 255, 255, 0.25);
-            backdrop-filter: blur(25px);
-            border-radius: 25px;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.4);
-        }
-        
-        .card-hover {
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        
-        .card-hover:hover {
-            transform: translateY(-8px) scale(1.02);
-            box-shadow: 0 20px 60px 0 rgba(31, 38, 135, 0.5);
-        }
-        
-        /* Enhanced gradients */
-        .gradient-text {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            color: transparent;
-        }
-        
-        .gradient-text-orange {
-            background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            color: transparent;
-        }
-        
-        .gradient-border {
-            position: relative;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
-            border-radius: 20px;
-            padding: 2px;
-        }
-        
-        .gradient-border::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            border-radius: 20px;
-            padding: 2px;
-            background: linear-gradient(135deg, #667eea, #764ba2, #f093fb);
-            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            mask-composite: exclude;
-        }
-        
-        /* Floating animation for elements */
-        .floating {
-            animation: floating 3s ease-in-out infinite alternate;
-        }
-        
-        @keyframes floating {
-            0% { transform: translateY(0px); }
-            100% { transform: translateY(-10px); }
-        }
-        
-        /* Pulse animation for CTA */
-        .pulse-glow {
-            animation: pulse-glow 2s ease-in-out infinite;
-        }
-        
-        @keyframes pulse-glow {
-            0%, 100% { box-shadow: 0 0 20px rgba(102, 126, 234, 0.5); }
-            50% { box-shadow: 0 0 30px rgba(102, 126, 234, 0.8); }
-        }
-        
-        /* Custom scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        
-        ::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-        }
-        
-        ::-webkit-scrollbar-thumb {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            border-radius: 10px;
-        }
-        
-        ::-webkit-scrollbar-thumb:hover {
-            background: linear-gradient(135deg, #764ba2, #667eea);
-        }
+      }
     </style>
-</head>
-<body class="relative">
-    <!-- Animated background -->
-    <div class="bg-animated"></div>
-    
-    <!-- Floating geometric shapes -->
-    <div class="geometric-shape"></div>
-    <div class="geometric-shape"></div>
-    <div class="geometric-shape"></div>
-    <div class="geometric-shape"></div>
+  </head>
+  <body>
+    <div class="background-animation"></div>
 
-    <main class="relative z-10 flex items-center justify-center min-h-screen p-4 sm:p-6 md:p-8">
-        <div class="w-full max-w-6xl space-y-8">
-            <!-- Hero Section -->
-            <section class="glass-morphism-strong p-8 md:p-12 floating">
-                <header class="flex items-center gap-6 mb-10">
-                    <div class="w-20 h-20 glass-morphism flex items-center justify-center p-3 flex-shrink-0">
-                        <svg viewBox="0 0 100 100" class="w-full h-full text-white">
-                            <path fill="currentColor" d="M35,25 h-10 v-5 h15 v15 h-5 Z"></path>
-                            <path fill="currentColor" d="M65,25 h10 v-5 h-15 v15 h5 Z"></path>
-                            <path fill="currentColor" d="M35,75 h-10 v5 h15 v-15 h-5 Z"></path>
-                            <path fill="currentColor" d="M65,75 h10 v5 h-15 v-15 h5 Z"></path>
-                            <path fill="currentColor" d="M50,35 a7,7 0 1 1 0,14 a7,7 0 1 1 0,-14 Z"></path>
-                            <path fill="currentColor" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" d="M62,50 a12,12 0 1 1 -24,0 c0,10 12,15 12,25"></path>
-                        </svg>
-                    </div>
-                    <div>
-                        <h1 class="text-4xl md:text-5xl font-bold text-white mb-2">Oksara <span class="font-light">by PPU</span></h1>
-                        <p class="text-xl text-white/80">The Unified OCR Solution for Modern Business</p>
-                    </div>
-                </header>
+    <header>
+      <div class="container header-content">
+        <a href="#" class="logo">
+          <img src="logo.png" alt="Oksara Logo" />
+          <span>Oksara</span>
+        </a>
+        <nav>
+          <ul>
+            <li><a href="#philosophy">Philosophy</a></li>
+            <li><a href="#difference">Difference</a></li>
+            <li><a href="#use-cases">Use Cases</a></li>
+          </ul>
+        </nav>
+        <a href="https://oksara.senar.id/" target="_blank" class="cta-button"
+          >View Docs</a
+        >
+      </div>
+    </header>
 
-                <div class="text-center glass-morphism p-10 my-12">
-                    <div class="space-y-2">
-                        <h2 class="text-3xl md:text-5xl font-black text-white leading-tight">
-                            Process <span class="gradient-text-orange">anything.</span>
-                        </h2>
-                        <h2 class="text-3xl md:text-5xl font-black text-white leading-tight">
-                            Store <span class="gradient-text-orange">nothing.</span>
-                        </h2>
-                        <h2 class="text-3xl md:text-5xl font-black text-white leading-tight">
-                            Return <span class="gradient-text-orange">everything.</span>
-                        </h2>
-                    </div>
-                </div>
-                
-                <blockquote class="text-center italic text-white/70 border-l-4 border-orange-400 pl-6 my-10 max-w-2xl mx-auto text-lg">
-                    "Perfection is not attainable, but if we chase perfection we can catch excellence."
-                    <cite class="block not-italic font-semibold mt-3 text-white">– Vince Lombardi</cite>
-                </blockquote>
-            </section>
-
-            <!-- Use Cases Section -->
-            <section class="glass-morphism p-8 md:p-10">
-                <div class="text-center mb-12">
-                    <h3 class="text-3xl font-bold text-white mb-4">A Single Solution for All Your Documents</h3>
-                    <p class="text-xl text-white/80 max-w-3xl mx-auto">Oksara unifies multiple OCR templates into one powerful, intelligent service. Automate data extraction from a wide range of documents.</p>
-                </div>
-                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
-                    <div class="card-hover glass-morphism p-6 text-center">
-                        <div class="w-14 h-14 mx-auto bg-gradient-to-br from-orange-400 to-pink-500 rounded-xl flex items-center justify-center mb-4">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white">
-                                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
-                                <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
-                            </svg>
-                        </div>
-                        <h4 class="font-bold text-white text-lg">KTP</h4>
-                    </div>
-                    <div class="card-hover glass-morphism p-6 text-center">
-                        <div class="w-14 h-14 mx-auto bg-gradient-to-br from-blue-400 to-purple-500 rounded-xl flex items-center justify-center mb-4">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white">
-                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                                <path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/><path d="M10 9H8"/>
-                            </svg>
-                        </div>
-                        <h4 class="font-bold text-white text-lg">Receipts</h4>
-                    </div>
-                    <div class="card-hover glass-morphism p-6 text-center">
-                        <div class="w-14 h-14 mx-auto bg-gradient-to-br from-green-400 to-teal-500 rounded-xl flex items-center justify-center mb-4">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white">
-                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                                <path d="M14 2v6h6"/><path d="M8 14h3"/><path d="M13 18H8"/><path d="M16 18h-2"/>
-                            </svg>
-                        </div>
-                        <h4 class="font-bold text-white text-lg">Bank Statements</h4>
-                    </div>
-                    <div class="card-hover glass-morphism p-6 text-center">
-                        <div class="w-14 h-14 mx-auto bg-gradient-to-br from-purple-400 to-pink-500 rounded-xl flex items-center justify-center mb-4">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white">
-                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                                <path d="M14 2v6h6"/><path d="M12 18v-6"/><path d="M12 12H9"/><path d="M12 12h3"/>
-                            </svg>
-                        </div>
-                        <h4 class="font-bold text-white text-lg">Resumes</h4>
-                    </div>
-                    <div class="card-hover glass-morphism p-6 text-center">
-                        <div class="w-14 h-14 mx-auto bg-gradient-to-br from-yellow-400 to-orange-500 rounded-xl flex items-center justify-center mb-4">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white">
-                                <path d="M12 15V6.5a2.5 2.5 0 0 0-5 0V15a6.5 6.5 0 1 0 13 0V6.5a4 4 0 0 0-8 0"/>
-                            </svg>
-                        </div>
-                        <h4 class="font-bold text-white text-lg">BPKB</h4>
-                    </div>
-                </div>
-            </section>
-
-            <!-- The 4S Philosophy Section -->
-            <section class="glass-morphism p-8 md:p-10">
-                <div class="text-center mb-12">
-                    <h3 class="text-3xl font-bold text-white mb-4">The 4S Philosophy: Our Core Principles</h3>
-                    <p class="text-xl text-white/80 max-w-3xl mx-auto">Oksara is built on four pillars that guarantee a secure, efficient, and intelligent server-side OCR engine.</p>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div class="card-hover glass-morphism p-8">
-                        <div class="flex items-center mb-4">
-                            <div class="w-16 h-16 bg-gradient-to-br from-orange-400 to-pink-500 rounded-full flex items-center justify-center mr-4">
-                                <span class="text-3xl font-black text-white">S</span>
-                            </div>
-                            <h4 class="text-2xl font-bold text-white">Stateless</h4>
-                        </div>
-                        <p class="text-white/80 text-lg leading-relaxed">Absolute privacy by design. We process your data and return the results without ever storing it, ensuring compliance and user trust.</p>
-                    </div>
-                    <div class="card-hover glass-morphism p-8">
-                        <div class="flex items-center mb-4">
-                            <div class="w-16 h-16 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center mr-4">
-                                <span class="text-3xl font-black text-white">S</span>
-                            </div>
-                            <h4 class="text-2xl font-bold text-white">Synchronous</h4>
-                        </div>
-                        <p class="text-white/80 text-lg leading-relaxed">Get immediate, real-time results. Our fire-and-forget mechanism ensures fast processing for individual documents without webhooks or callbacks.</p>
-                    </div>
-                    <div class="card-hover glass-morphism p-8">
-                        <div class="flex items-center mb-4">
-                            <div class="w-16 h-16 bg-gradient-to-br from-green-400 to-teal-500 rounded-full flex items-center justify-center mr-4">
-                                <span class="text-3xl font-black text-white">S</span>
-                            </div>
-                            <h4 class="text-2xl font-bold text-white">Self-Discriminating</h4>
-                        </div>
-                        <p class="text-white/80 text-lg leading-relaxed">Our engine intelligently detects document subtypes (e.g., different receipt vendors or BPKB formats) without extra configuration from you.</p>
-                    </div>
-                    <div class="card-hover glass-morphism p-8">
-                        <div class="flex items-center mb-4">
-                            <div class="w-16 h-16 bg-gradient-to-br from-purple-400 to-pink-500 rounded-full flex items-center justify-center mr-4">
-                                <span class="text-3xl font-black text-white">S</span>
-                            </div>
-                            <h4 class="text-2xl font-bold text-white">Server-to-Server</h4>
-                        </div>
-                        <p class="text-white/80 text-lg leading-relaxed">A dedicated backend extension for your services. No UI, no sessions—just a pure, powerful, and easily integrated OCR engine.</p>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Why Oksara Section -->
-            <section class="glass-morphism p-8 md:p-10">
-                <div class="text-center mb-12">
-                    <h3 class="text-3xl font-bold text-white mb-4">The Oksara Difference</h3>
-                    <p class="text-xl text-white/80 max-w-3xl mx-auto">Go beyond standard OCR with a solution built for flexibility, performance, and the future.</p>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <div class="card-hover glass-morphism p-8 text-center">
-                        <div class="w-20 h-20 mx-auto bg-gradient-to-br from-orange-400 to-pink-500 rounded-full flex items-center justify-center mb-6">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white">
-                                <path d="M12.22 2h-4.44a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8.88z"/>
-                                <path d="M15 2v6h6"/><path d="m10 14-2 2 2 2"/><path d="m14 18 2-2-2-2"/>
-                            </svg>
-                        </div>
-                        <h4 class="font-bold text-2xl text-white mb-4">Optimized Performance</h4>
-                        <p class="text-white/80 text-lg leading-relaxed">Our multi-engine approach selects the best tool for each job, proven by extensive benchmarks to deliver superior accuracy and speed.</p>
-                    </div>
-                    <div class="card-hover glass-morphism p-8 text-center">
-                        <div class="w-20 h-20 mx-auto bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center mb-6">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white">
-                                <path d="M12 22a10 10 0 1 1 0-20 10 10 0 0 1 0 20z"/>
-                                <path d="m9 12 2 2 4-4"/>
-                            </svg>
-                        </div>
-                        <h4 class="font-bold text-2xl text-white mb-4">Seamless Integration</h4>
-                        <p class="text-white/80 text-lg leading-relaxed">Built for developers with a clean API, interactive documentation, and a modular design for easy, plug-and-play implementation.</p>
-                    </div>
-                    <div class="card-hover glass-morphism p-8 text-center">
-                        <div class="w-20 h-20 mx-auto bg-gradient-to-br from-green-400 to-teal-500 rounded-full flex items-center justify-center mb-6">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white">
-                                <path d="M15.7 12.9a2.5 2.5 0 0 0-3.4 0"/>
-                                <path d="M15.7 12.9a2.5 2.5 0 0 0-3.4 0"/>
-                                <path d="M10.8 17.5a2.5 2.5 0 0 0 3.4 0"/>
-                                <path d="M3 7.2C5.2 9.7 8.6 11 12.5 11s7.3-1.3 9.5-3.8"/>
-                                <path d="M3 16.8c2.2-2.5 5.6-3.8 9.5-3.8s7.3 1.3 9.5 3.8"/>
-                            </svg>
-                        </div>
-                        <h4 class="font-bold text-2xl text-white mb-4">Future-Ready</h4>
-                        <p class="text-white/80 text-lg leading-relaxed">We are constantly evolving, with plans for asynchronous processing for large files and exploration of LLM-based capabilities.</p>
-                    </div>
-                </div>
-            </section>
-
-            <!-- CTA Section -->
-            <section class="glass-morphism-strong p-8 md:p-10 text-center">
-                <h3 class="text-3xl font-bold text-white mb-4">Ready to Transform Your Document Processing?</h3>
-                <p class="text-xl text-white/80 mb-8 max-w-2xl mx-auto">Join the future of OCR technology with Oksara's intelligent, secure, and efficient solutions.</p>
-                <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                    <button class="glass-morphism px-8 py-4 text-lg font-semibold text-white hover:bg-white/20 transition-all duration-300 pulse-glow">
-                        Get Started Today
-                    </button>
-                    <button class="glass-morphism px-8 py-4 text-lg font-semibold text-white hover:bg-white/20 transition-all duration-300">
-                        View Documentation
-                    </button>
-                </div>
-            </section>
-
-            <!-- Footer -->
-            <footer class="text-center text-white/60 text-sm py-6">
-                <p>&copy; 2024 Oksara by PT Perkasa Pilar Utama. All rights reserved.</p>
-            </footer>
+    <main>
+      <section class="hero">
+        <div class="container">
+          <h1 class="slogan">
+            <span>Process <span class="highlight">anything.</span></span>
+            <span>Store <span class="highlight">nothing.</span></span>
+            <span>Return <span class="highlight">everything.</span></span>
+          </h1>
+          <p>
+            Oksara is a developer-first, server-to-server OCR engine. We provide
+            a unified, stateless API for intelligent document processing,
+            designed for maximum performance, security, and ease of integration.
+          </p>
+          <a href="#philosophy" class="cta-button">Discover Our Philosophy</a>
         </div>
+      </section>
+
+      <section id="philosophy" class="container">
+        <h2 class="section-title">The 4S Philosophy</h2>
+        <p class="section-subtitle">
+          Oksara is built on four pillars that guarantee a secure, efficient,
+          and intelligent server-side OCR engine.
+        </p>
+        <div class="philosophy-grid">
+          <div class="philosophy-card">
+            <h3><span class="highlight">S</span>tateless</h3>
+            <p>
+              Absolute privacy by design. We process your data and return the
+              results without ever storing it, ensuring compliance and user
+              trust.
+            </p>
+          </div>
+          <div class="philosophy-card">
+            <h3><span class="highlight">S</span>erver-to-Server</h3>
+            <p>
+              A dedicated backend extension for your services. No UI, no
+              sessions—just a pure, powerful, and easily integrated OCR engine.
+            </p>
+          </div>
+          <div class="philosophy-card">
+            <h3><span class="highlight">S</span>elf-Discriminating</h3>
+            <p>
+              Our engine intelligently detects document subtypes (e.g.,
+              different receipt vendors or BPKB formats) without extra
+              configuration from you.
+            </p>
+          </div>
+          <div class="philosophy-card">
+            <h3><span class="highlight">S</span>ynchronous</h3>
+            <p>
+              Get immediate, real-time results. Our fire-and-forget mechanism
+              ensures fast processing for individual documents without webhooks
+              or callbacks.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section id="difference" class="container">
+        <h2 class="section-title">The Oksara Difference</h2>
+        <p class="section-subtitle">
+          Go beyond standard OCR with a solution built for flexibility,
+          performance, and the future.
+        </p>
+        <div class="difference-grid">
+          <div class="difference-card">
+            <div class="icon-wrapper">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  d="M12.22 2h-4.44a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8.88z"
+                />
+                <path d="M15 2v6h6" />
+                <path d="m10 14-2 2 2 2" />
+                <path d="m14 18 2-2-2-2" />
+              </svg>
+            </div>
+            <h3>Optimized Performance</h3>
+            <p>
+              Our multi-engine approach selects the best tool for each job,
+              proven by extensive benchmarks to deliver superior accuracy and
+              speed.
+            </p>
+          </div>
+          <div class="difference-card">
+            <div class="icon-wrapper">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M12 22a10 10 0 1 1 0-20 10 10 0 0 1 0 20z" />
+                <path d="m9 12 2 2 4-4" />
+              </svg>
+            </div>
+            <h3>Seamless Integration</h3>
+            <p>
+              Built for developers with a clean API, interactive documentation,
+              and a modular design for easy, plug-and-play implementation.
+            </p>
+          </div>
+          <div class="difference-card">
+            <div class="icon-wrapper">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M15.7 12.9a2.5 2.5 0 0 0-3.4 0" />
+                <path d="M15.7 12.9a2.5 2.5 0 0 0-3.4 0" />
+                <path d="M10.8 17.5a2.5 2.5 0 0 0 3.4 0" />
+                <path d="M3 7.2C5.2 9.7 8.6 11 12.5 11s7.3-1.3 9.5-3.8" />
+                <path d="M3 16.8c2.2-2.5 5.6-3.8 9.5-3.8s7.3 1.3 9.5 3.8" />
+              </svg>
+            </div>
+            <h3>Future-Ready</h3>
+            <p>
+              We are constantly evolving, with plans for asynchronous processing
+              for large files and exploration of LLM-based capabilities.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section id="use-cases" class="container">
+        <h2 class="section-title">A Unified Solution For All Documents</h2>
+        <p class="section-subtitle">
+          Oksara unifies multiple OCR templates into one powerful, intelligent
+          service. Automate data extraction from a wide range of documents.
+        </p>
+        <div class="use-cases-grid">
+          <div class="use-case-card">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+              <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+            </svg>
+            <p>KTP</p>
+          </div>
+          <div class="use-case-card">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path
+                d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"
+              />
+              <path d="M14 2v6h6" />
+              <path d="M16 13H8" />
+              <path d="M16 17H8" />
+              <path d="M10 9H8" />
+            </svg>
+            <p>Receipts</p>
+          </div>
+          <div class="use-case-card">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path
+                d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"
+              />
+              <path d="M14 2v6h6" />
+              <path d="M8 14h3" />
+              <path d="M13 18H8" />
+              <path d="M16 18h-2" />
+            </svg>
+            <p>Bank Statements</p>
+          </div>
+          <div class="use-case-card">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path
+                d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"
+              />
+              <path d="M14 2v6h6" />
+              <path d="M12 18v-6" />
+              <path d="M12 12H9" />
+              <path d="M12 12h3" />
+            </svg>
+            <p>Resumes</p>
+          </div>
+          <div class="use-case-card">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path
+                d="M12 15V6.5a2.5 2.5 0 0 0-5 0V15a6.5 6.5 0 1 0 13 0V6.5a4 4 0 0 0-8 0"
+              />
+            </svg>
+            <p>BPKB</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="container">
+        <div class="cta-section">
+          <h2>Ready to Build the Future?</h2>
+          <p>
+            Explore our interactive documentation and integrate Oksara in
+            minutes.
+          </p>
+          <a href="https://oksara.senar.id/" target="_blank" class="cta-button"
+            >Get Started Now</a
+          >
+        </div>
+      </section>
     </main>
-</body>
+
+    <footer>
+      <div class="container footer-content">
+        <a href="https://www.ppu.co.id/" target="_blank" class="footer-logo">
+          <img src="company-logo.png" alt="PT Perkasa Pilar Utama Logo" />
+        </a>
+        <p class="footer-text">
+          &copy; 2024 Oksara by PT Perkasa Pilar Utama. All Rights Reserved.
+        </p>
+      </div>
+    </footer>
+  </body>
 </html>
